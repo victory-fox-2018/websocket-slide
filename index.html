@@ -1,0 +1,147 @@
+<!doctype html>
+<html>
+
+<head>
+  <title>Socket.IO chat</title>
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font: 13px Helvetica, Arial;
+    }
+
+    form {
+      background: #000;
+      padding: 3px;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
+
+    form input {
+      border: 0;
+      padding: 10px;
+      width: 90%;
+      margin-right: .5%;
+    }
+
+    form button {
+      width: 9%;
+      background: rgb(130, 224, 255);
+      border: none;
+      padding: 10px;
+    }
+
+    #messages {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    #messages li {
+      padding: 5px 10px;
+    }
+
+    #messages li:nth-child(odd) {
+      background: #eee;
+    }
+
+    /* Slider */
+
+    .w3-content{top: 0; width: 100%; position: fixed;}
+    .w3-display-right, .w3-display-left {position: fixed;}
+    
+    .fade {
+      -webkit-animation-name: fade;
+      -webkit-animation-duration: 1.5s;
+      animation-name: fade;
+      animation-duration: 1.5s;
+    }
+
+    @-webkit-keyframes fade {
+      from {
+        opacity: .4
+      }
+      to {
+        opacity: 1
+      }
+    }
+
+    @keyframes fade {
+      from {
+        opacity: .4
+      }
+      to {
+        opacity: 1
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="w3-content w3-display-container">
+    <img class="mySlides fade" src="https://wallpaper-gallery.net/images/windows-backgrounds-wallpaper/windows-backgrounds-wallpaper-5.jpg">
+    <img class="mySlides fade" src="https://wallpapercave.com/wp/NzRe70C.jpg">
+    <img class="mySlides fade" src="https://wallpaper-house.com/data/out/12/wallpaper2you_504450.jpg">
+    <img class="mySlides fade" src="https://wallpaper-house.com/data/out/12/wallpaper2you_567266.jpg">
+    
+    <button class="w3-button w3-black w3-display-left">&#10094;</button>
+    <button class="w3-button w3-black w3-display-right">&#10095;</button>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+  <script>
+    var slideIndex = 1;
+
+     $(function () {
+      var socket = io();
+      $('.w3-display-left').click(function () {
+        socket.emit('slide left', slideIndex);
+        return false;
+      });
+
+      socket.on('test left', function (slideIndex) {
+        console.log('balik emit left', slideIndex)
+        plusDivs(-1)
+      });
+
+      $('.w3-display-right').click(function () {
+        socket.emit('slide right', slideIndex);
+        return false;
+      });
+
+      socket.on('test right', function (slideIndex) {
+        console.log('balik emit right', slideIndex)
+        plusDivs(1)
+      });
+    });
+
+
+    showDivs(slideIndex);
+
+    function plusDivs(n) {
+      showDivs(slideIndex += n);
+    }
+
+    function showDivs(n) {
+      var i;
+      var x = $(".mySlides");
+      if (n > x.length) { slideIndex = 1 }
+      if (n < 1) { slideIndex = x.length }
+      for (i = 0; i < x.length; i++) {
+        x[i].style.display = "none";
+      }
+      x[slideIndex - 1].style.display = "block";
+      console.log(slideIndex)
+    }
+  </script>
+</body>
+
+</html>
