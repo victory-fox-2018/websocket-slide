@@ -1,0 +1,12 @@
+{
+  "name": "websocket-slide",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/julianjca/websocket-slide.git",
+  "author": "julianjca <julianjca11@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.16.3",
+    "socket.io": "^2.1.1"
+  }
+}
