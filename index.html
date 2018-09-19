@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>WebSocket Slide | Renaldy Pratama</title>
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <style>
+    .mySlides {display:none;}
+  </style>
+</head>
+<body>
+  <div>
+    <img class="mySlides" src="https://images.unsplash.com/photo-1536302829663-a460b9ec95b9?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=973ec41393666bd7f8857c1d84479d02&auto=format&fit=crop&w=1355&q=80" style="width:100%">
+    <img class="mySlides" src="https://images.unsplash.com/photo-1532982116380-02ce47a3e03c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=8b8258c4af2ddf29559830e8a3b3e14e&auto=format&fit=crop&w=1350&q=80" style="width:100%">
+    <img class="mySlides" src="https://images.unsplash.com/photo-1533400986144-1bc90df04d1a?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=73d44759733fe5c8f03e10a76d375fe8&auto=format&fit=crop&w=1350&q=80" style="width:100%">
+    <img class="mySlides" src="https://images.unsplash.com/photo-1527254432336-72d0c3ad1942?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6d8db57f15a7e38c043ba89f15b74d0a&auto=format&fit=crop&w=1351&q=80" style="width:100%">
+    <img class="mySlides" src="https://images.unsplash.com/photo-1496737018672-b1a6be2e949c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=f0aa3d84be0ad9a656a27a318f055ee9&auto=format&fit=crop&w=1491&q=80" style="width:100%">
+    <button class="w3-button w3-black w3-display-left" onclick="plusDivs(-1)">&#10094;</button>
+    <button class="w3-button w3-black w3-display-right" onclick="plusDivs(1)">&#10095;</button>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io()
+    
+    var slideIndex = 1;
+    showDivs(slideIndex);
+    
+    function plusDivs(n) {
+      socket.emit('next slide', slideIndex += n);
+    }
+
+    socket.on('next slide', showDivs);
+    
+    function showDivs(n) {
+      var i;
+      var x = document.getElementsByClassName("mySlides");
+      if (n > x.length) {slideIndex = 1}    
+      else if (n < 1) {slideIndex = x.length}
+      else { slideIndex = n}
+      for (i = 0; i < x.length; i++) {
+        x[i].style.display = "none";  
+      }
+      x[slideIndex-1].style.display = "block";  
+    }
+  </script>  
+  
+</body>
+</html>
