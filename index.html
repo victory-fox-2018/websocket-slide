@@ -1,0 +1,145 @@
+<html>
+  <head>
+    <title>Websocket Slide</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css?family=Raleway:900" rel="stylesheet">
+    <style>
+      * {
+          margin: 0;
+          padding: 0; 
+          box-sizing: border-box;
+      }
+
+      body {
+          font: 13px Helvetica, Arial;
+          background-image: url('https://source.unsplash.com/k2zWqv_yfNM/1700x950');
+          background-size: cover;
+      }
+
+      #buttons {
+        margin-top: 200px; 
+      }
+
+      i {
+          font-size: 20px;
+          padding: 5px;
+      }
+
+      #dirInput, #submitBtn {
+        visibility: hidden;
+      }
+
+      h1 {
+        color: white;
+        text-align: center;
+        margin-top: 20%;
+        font-size: 100px;
+        font-family: 'Raleway', sans-serif;
+      }
+    </style>
+    <script>
+      let startUrl = 'https://source.unsplash.com/'
+      let endUrl = '/1700x950'
+      let imageUrl = [
+        ['CAbbMdcenUQ', 'IuQKQxZs-TA', '0Kyp7uO-3RQ'],
+        ['GraajutbJHE', 'k2zWqv_yfNM', 'sp-p7uuT0tw'],
+        ['Rfflri94rs8', 'ndN00KmbJ1c', 'buF62ewDLcQ']
+      ]
+      let imageCaption = [
+        ['Top Left', 'Top Center', 'Top Right'],
+        ['Middle Left', 'Middle Center', 'Middle Right'],
+        ['Bottom Left', 'Bottom Center', 'Bottom Right']
+      ]
+      let currentImage = [1, 1]
+
+      $(function () {
+          var socket = io();
+          $('#submitBtn').click(function(){
+              socket.emit('direction', $('#dirInput').val());
+              $('#dirInput').val('')
+              return false;
+          });
+          socket.on('direction', function(msg){
+            if (msg === 'left') {
+              if (currentImage[1] > 0) {
+                currentImage[1] -= 1
+                if (currentImage[1] === 0) {
+                  $('#left').hide()
+                  $('#left-space').addClass('col-5').removeClass('col-4')
+                } else if (currentImage[1] < 2) {
+                  $('#right').show()
+                }
+              }
+            } else if (msg === 'right') {
+              if (currentImage[1] < 2) {
+                currentImage[1] += 1
+                if (currentImage[1] === 2) {
+                  $('#right').hide()
+                } else if (currentImage[1] > 0) {
+                  $('#left').show()
+                  $('#left-space').addClass('col-4').removeClass('col-5')
+                }
+              }
+            } else if (msg === 'up') {
+              if (currentImage[0] > 0) {
+                currentImage[0] -= 1
+                if (currentImage[0] === 0) {
+                  $('#up').hide()
+                } else if (currentImage[0] < 2) {
+                  $('#down').show()
+                }
+              }
+            } else if (msg === 'down') {
+              if (currentImage[0] < 2) {
+                currentImage[0] += 1
+                if (currentImage[0] === 2) {
+                  $('#down').hide()
+                } else if (currentImage[0] > 0) {
+                  $('#up').show()
+                }
+              }
+            }
+            
+            $('body').css('background-image', `url(${startUrl}${imageUrl[currentImage[0]][currentImage[1]]}${endUrl})`)
+            $('#caption').text('')
+            $('#caption').append(`${imageCaption[currentImage[0]][currentImage[1]]}`)
+          });
+      });
+    </script>
+  </head>
+  <body>
+
+    <input id="dirInput" autocomplete="off" value=''/><button id='submitBtn'>Send</button>
+
+    <h1 id='caption'>Middle Center</h1>
+
+    <div class="container">
+      <div id="buttons" class="row">
+        <div id='left-space'class="col-4"></div>
+        <button onclick='dirClick("left")' id='left' class="col-1 m-2"><i class="fas fa-arrow-circle-left"></i></button>
+        <div class="col-2 mx-2">
+          <div class="row">
+            <button onclick='dirClick("up")' id='up' class='col-12 my-1'><i class="fas fa-arrow-circle-up"></i></button>
+          </div>
+          <div class="row">
+            <button onclick='dirClick("down")' id='down' class='col-12 my-1'><i class="fas fa-arrow-circle-down"></i></button>
+          </div>
+        </div>
+        <button onclick='dirClick("right")' id='right' class="col-1 m-2"><i class="fas fa-arrow-circle-right"></i></button>
+        <div class="col-4"></div>
+      </div>
+    </div>
+
+    <script>
+
+      function dirClick(dir) {
+        $('#dirInput').val(dir)
+        $('#submitBtn').click()
+      }
+    
+    </script>
+  </body>
+</html>
